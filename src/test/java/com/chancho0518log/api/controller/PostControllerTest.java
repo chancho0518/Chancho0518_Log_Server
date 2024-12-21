@@ -14,6 +14,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -51,8 +52,7 @@ class PostControllerTest {
         // expected
         mockMvc.perform(post("/posts")
                         .contentType(APPLICATION_JSON)
-                        .content(json)
-                )
+                        .content(json))
                 .andExpect(status().isOk())
                 .andExpect(content().string("{}"))
                 .andDo(print());
@@ -72,8 +72,7 @@ class PostControllerTest {
         // expected
         mockMvc.perform(post("/posts")
                         .contentType(APPLICATION_JSON)
-                        .content(json)
-                )
+                        .content(json))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.code").value("400"))
                 .andExpect(jsonPath("$.message").value("잘못된 요청입니다."))
@@ -96,8 +95,7 @@ class PostControllerTest {
         // when
         mockMvc.perform(post("/posts")
                         .contentType(APPLICATION_JSON)
-                        .content(json)
-                )
+                        .content(json))
                 .andExpect(status().isOk())
                 .andDo(print());
 
@@ -109,4 +107,26 @@ class PostControllerTest {
         assertEquals("글 내용입니다.", post.getContent());
     }
 
+    @Test
+    @DisplayName("글 단건 조회")
+    void getOnePost() throws Exception {
+
+        // given
+        Post post = Post.builder()
+                .title("1번 글 제목입니다.")
+                .content("1번 글 내용입니다.")
+                .build();
+
+        postRepository.save(post);
+
+        // expected
+        mockMvc.perform(get("/posts/{postId}", post.getId())
+                        .contentType(APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(post.getId()))
+                .andExpect(jsonPath("$.title").value("1번 글 제목입니다."))
+                .andExpect(jsonPath("$.content").value("1번 글 내용입니다."))
+                .andDo(print());
+
+    }
 }
