@@ -3,6 +3,7 @@ package com.chancho0518log.api.service;
 import com.chancho0518log.api.domain.Post;
 import com.chancho0518log.api.repository.PostRepository;
 import com.chancho0518log.api.request.PostCreate;
+import com.chancho0518log.api.response.PostResponse;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -60,12 +61,12 @@ class PostServiceTest {
         postRepository.save(requestPost);
 
         // when
-        Post post = postService.get(requestPost.getId());
+        PostResponse response = postService.get(requestPost.getId());
 
         // then
-        assertNotNull(post);
+        assertNotNull(response);
         assertEquals(1L, postRepository.count());
-        assertEquals("글 제목입니다.", post.getTitle());
-        assertEquals("글 내용입니다.", post.getContent());
+        assertEquals("글 제목입니다.", response.getTitle());
+        assertEquals("글 내용입니다.", response.getContent());
     }
 }
