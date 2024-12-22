@@ -113,7 +113,7 @@ class PostControllerTest {
 
         // given
         Post post = Post.builder()
-                .title("1번 글 제목입니다.")
+                .title("1번 글 제목")
                 .content("1번 글 내용입니다.")
                 .build();
 
@@ -124,9 +124,31 @@ class PostControllerTest {
                         .contentType(APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(post.getId()))
-                .andExpect(jsonPath("$.title").value("1번 글 제목입니다."))
+                .andExpect(jsonPath("$.title").value("1번 글 제목"))
                 .andExpect(jsonPath("$.content").value("1번 글 내용입니다."))
                 .andDo(print());
 
+    }
+
+    @Test
+    @DisplayName("Service 정책에 따른 글 단건 조회")
+    void servicePolicy() throws Exception {
+
+        // given
+        Post post = Post.builder()
+                .title("123456789012345")
+                .content("1번 글 내용입니다.")
+                .build();
+
+        postRepository.save(post);
+
+        // expected
+        mockMvc.perform(get("/posts/{postId}", post.getId())
+                        .contentType(APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(post.getId()))
+                .andExpect(jsonPath("$.title").value("1234567890"))
+                .andExpect(jsonPath("$.content").value("1번 글 내용입니다."))
+                .andDo(print());
     }
 }
