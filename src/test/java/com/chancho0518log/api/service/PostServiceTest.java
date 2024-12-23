@@ -4,14 +4,16 @@ import com.chancho0518log.api.domain.Post;
 import com.chancho0518log.api.repository.PostRepository;
 import com.chancho0518log.api.request.PostCreate;
 import com.chancho0518log.api.response.PostResponse;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import static org.junit.jupiter.api.Assertions.*;
+import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @SpringBootTest
 class PostServiceTest {
@@ -68,5 +70,31 @@ class PostServiceTest {
         assertEquals(1L, postRepository.count());
         assertEquals("글 제목입니다.", response.getTitle());
         assertEquals("글 내용입니다.", response.getContent());
+    }
+
+    @Test
+    @DisplayName("글 리스트 조회")
+    void getList() {
+
+        // given
+        Post requestPost1st = Post.builder()
+                .title("글 제목입니다.111")
+                .content("글 내용입니다.111")
+                .build();
+
+        postRepository.save(requestPost1st);
+
+        Post requestPost2nd = Post.builder()
+                .title("글 제목입니다.222")
+                .content("글 내용입니다.222")
+                .build();
+
+        postRepository.save(requestPost2nd);
+
+        // when
+        List<PostResponse> postsResponse = postService.getList();
+
+        // then
+        assertEquals(2L, postsResponse.size());
     }
 }

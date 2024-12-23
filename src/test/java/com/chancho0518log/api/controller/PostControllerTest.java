@@ -127,7 +127,6 @@ class PostControllerTest {
                 .andExpect(jsonPath("$.title").value("1번 글 제목"))
                 .andExpect(jsonPath("$.content").value("1번 글 내용입니다."))
                 .andDo(print());
-
     }
 
     @Test
@@ -149,6 +148,33 @@ class PostControllerTest {
                 .andExpect(jsonPath("$.id").value(post.getId()))
                 .andExpect(jsonPath("$.title").value("1234567890"))
                 .andExpect(jsonPath("$.content").value("1번 글 내용입니다."))
+                .andDo(print());
+    }
+
+    @Test
+    @DisplayName("글 리스트 조회")
+    void getList() throws Exception {
+
+        // given
+        Post post1st = Post.builder()
+                .title("1번 글 제목")
+                .content("1번 글 내용입니다.")
+                .build();
+
+        postRepository.save(post1st);
+
+        Post post2nd = Post.builder()
+                .title("2번 글 제목")
+                .content("2번 글 내용입니다.")
+                .build();
+
+        postRepository.save(post2nd);
+
+        // expected
+        mockMvc.perform(get("/posts")
+                        .contentType(APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.length()", is(2)))
                 .andDo(print());
     }
 }
