@@ -1,6 +1,5 @@
 package com.chancho0518log.api.controller;
 
-import com.chancho0518log.api.domain.Post;
 import com.chancho0518log.api.request.PostCreate;
 import com.chancho0518log.api.response.PostResponse;
 import com.chancho0518log.api.service.PostService;
@@ -27,10 +26,8 @@ public class PostController {
     }
 
     @GetMapping("/posts/{postId}")
-    public PostResponse get(@PathVariable(name = "postId") Long id) {
+    public PostResponse get(@PathVariable Long postId) {
 
-        PostResponse response = postService.get(id);
-
-        return response;
+        return postService.get(postId);
     }
 }
