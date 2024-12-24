@@ -77,19 +77,16 @@ class PostServiceTest {
     void getList() {
 
         // given
-        Post requestPost1st = Post.builder()
-                .title("글 제목입니다.111")
-                .content("글 내용입니다.111")
-                .build();
-
-        postRepository.save(requestPost1st);
-
-        Post requestPost2nd = Post.builder()
-                .title("글 제목입니다.222")
-                .content("글 내용입니다.222")
-                .build();
-
-        postRepository.save(requestPost2nd);
+        postRepository.saveAll(List.of(
+                Post.builder()
+                        .title("글 제목입니다.111")
+                        .content("글 내용입니다.111")
+                        .build(),
+                Post.builder()
+                        .title("글 제목입니다.222")
+                        .content("글 내용입니다.222")
+                        .build()
+        ));
 
         // when
         List<PostResponse> postsResponse = postService.getList();
