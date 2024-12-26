@@ -6,6 +6,7 @@ import com.chancho0518log.api.request.PostCreate;
 import com.chancho0518log.api.response.PostResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -42,9 +43,11 @@ public class PostService {
                 .build();
     }
 
-    public List<PostResponse> getList() {
+    public List<PostResponse> getList(Pageable pageable) {
 
-        return postRepository.findAll().stream()
+//        Pageable pageable = PageRequest.of(pageable, 5, Sort.by(Sort.Direction.DESC ,"id"));
+
+        return postRepository.findAll(pageable).stream()
                 .map(PostResponse::new)
                 .collect(Collectors.toList());
     }

@@ -9,11 +9,16 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.springframework.data.domain.Sort.Direction.DESC;
 
 @SpringBootTest
 class PostServiceTest {
@@ -73,25 +78,28 @@ class PostServiceTest {
     }
 
     @Test
-    @DisplayName("글 리스트 조회")
+    @DisplayName("글 리스트 1page 조회 / 페이징 처리")
     void getList() {
 
         // given
-        postRepository.saveAll(List.of(
-                Post.builder()
-                        .title("글 제목입니다.111")
-                        .content("글 내용입니다.111")
-                        .build(),
-                Post.builder()
-                        .title("글 제목입니다.222")
-                        .content("글 내용입니다.222")
-                        .build()
-        ));
+        List<Post> requestPosts = IntStream.range(1, 31)
+                        .mapToObj(i -> Post.builder()
+                                .title(i + "번 글 제목입니다.")
+                                .content(i + "번 글 내용입니다.")
+                                .build()).collect(Collectors.toList());
+
+        postRepository.saveAll(requestPosts);
+
+        Pageable pageable = PageRequest.of(0, 5, DESC, "id");
 
         // when
-        List<PostResponse> postsResponse = postService.getList();
+        List<PostResponse> postsResponse = postService.getList(pageable);
 
         // then
-        assertEquals(2L, postsResponse.size());
+        assertEquals(5L, postsResponse.size());
+        assertEquals("30번 글 제목입니다.", postsResponse.get(0).getTitle());
+        assertEquals("26번 글 제목입니다.", postsResponse.get(4).getTitle());
+        assertEquals("30번 글 내용입니다.", postsResponse.get(0).getContent());
+        assertEquals("26번 글 내용입니다.", postsResponse.get(4).getContent());
     }
 }
