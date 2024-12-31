@@ -1,12 +1,12 @@
 package com.chancho0518log.api.controller;
 
 import com.chancho0518log.api.request.PostCreate;
+import com.chancho0518log.api.request.PostSearch;
 import com.chancho0518log.api.response.PostResponse;
 import com.chancho0518log.api.service.PostService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -29,13 +29,11 @@ public class PostController {
 
     @GetMapping("/posts/{postId}")
     public PostResponse get(@PathVariable Long postId) {
-
         return postService.get(postId);
     }
 
     @GetMapping("/posts")
-    public List<PostResponse> getList(Pageable pageable) {
-
-        return postService.getList(pageable);
+    public List<PostResponse> getList(@ModelAttribute PostSearch postSearch) {
+        return postService.getList(postSearch);
     }
 }

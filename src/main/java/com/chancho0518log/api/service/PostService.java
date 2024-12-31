@@ -3,10 +3,10 @@ package com.chancho0518log.api.service;
 import com.chancho0518log.api.domain.Post;
 import com.chancho0518log.api.repository.PostRepository;
 import com.chancho0518log.api.request.PostCreate;
+import com.chancho0518log.api.request.PostSearch;
 import com.chancho0518log.api.response.PostResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -43,9 +43,8 @@ public class PostService {
                 .build();
     }
 
-    public List<PostResponse> getList(Pageable pageable) {
-
-        return postRepository.findAll(pageable).stream()
+    public List<PostResponse> getList(PostSearch postSearch) {
+        return postRepository.getList(postSearch).stream()
                 .map(PostResponse::new)
                 .collect(Collectors.toList());
     }

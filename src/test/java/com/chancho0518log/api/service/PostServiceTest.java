@@ -3,14 +3,13 @@ package com.chancho0518log.api.service;
 import com.chancho0518log.api.domain.Post;
 import com.chancho0518log.api.repository.PostRepository;
 import com.chancho0518log.api.request.PostCreate;
+import com.chancho0518log.api.request.PostSearch;
 import com.chancho0518log.api.response.PostResponse;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -18,7 +17,6 @@ import java.util.stream.IntStream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.springframework.data.domain.Sort.Direction.DESC;
 
 @SpringBootTest
 class PostServiceTest {
@@ -90,13 +88,16 @@ class PostServiceTest {
 
         postRepository.saveAll(requestPosts);
 
-        Pageable pageable = PageRequest.of(0, 5, DESC, "id");
+        PostSearch postSearch = PostSearch.builder()
+                .page(1)
+                .size(10)
+                .build();
 
         // when
-        List<PostResponse> postsResponse = postService.getList(pageable);
+        List<PostResponse> postsResponse = postService.getList(postSearch);
 
         // then
-        assertEquals(5L, postsResponse.size());
+        assertEquals(10L, postsResponse.size());
         assertEquals("30번 글 제목입니다.", postsResponse.get(0).getTitle());
         assertEquals("26번 글 제목입니다.", postsResponse.get(4).getTitle());
         assertEquals("30번 글 내용입니다.", postsResponse.get(0).getContent());
