@@ -235,30 +235,28 @@ class PostControllerTest {
                 .andDo(print());
     }
 
-//    @Test
-//    @DisplayName("글 내용 edit")
-//    void contentEditContollerTest() {
-//
-//        // given
-//        Post post = Post.builder()
-//                .title("글 제목 입니다.")
-//                .content("글 내용 입니다.")
-//                .build();
-//
-//        postRepository.save(post);
-//
-//        PostEdit postEdit = PostEdit.builder()
-//                .title("글 제목 입니다.")
-//                .content("수정된 글 내용")
-//                .build();
-//
-//        // when
-//        postService.edit(post.getId(), postEdit);
-//
-//        // then
-//        Post editedPost = postRepository.findById(post.getId())
-//                .orElseThrow(() -> new RuntimeException("글이 존재하지 않습니다. postId = " + post.getId()));
-//
-//        assertEquals("수정된 글 내용", editedPost.getContent());
-//    }
+    @Test
+    @DisplayName("글 내용 edit")
+    void contentEditContollerTest() throws Exception {
+
+        // given
+        Post post = Post.builder()
+                .title("글 제목 입니다.")
+                .content("글 내용 입니다.")
+                .build();
+
+        postRepository.save(post);
+
+        PostEdit postEdit = PostEdit.builder()
+                .title("글 제목 입니다.")
+                .content("수정된 글 내용")
+                .build();
+
+        // expected
+        mockMvc.perform(patch("/posts/{postId}", post.getId())
+                        .contentType(APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(postEdit)))
+                .andExpect(status().isOk())
+                .andDo(print());
+    }
 }

@@ -145,7 +145,7 @@ class PostServiceTest {
         postRepository.save(post);
 
         PostEdit postEdit = PostEdit.builder()
-                .title("글 제목 입니다.")
+                .title(null)
                 .content("수정된 글 내용")
                 .build();
 
