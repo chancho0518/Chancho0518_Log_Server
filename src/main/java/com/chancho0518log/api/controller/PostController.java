@@ -1,6 +1,7 @@
 package com.chancho0518log.api.controller;
 
 import com.chancho0518log.api.request.PostCreate;
+import com.chancho0518log.api.request.PostEdit;
 import com.chancho0518log.api.request.PostSearch;
 import com.chancho0518log.api.response.PostResponse;
 import com.chancho0518log.api.service.PostService;
@@ -35,5 +36,10 @@ public class PostController {
     @GetMapping("/posts")
     public List<PostResponse> getList(@ModelAttribute PostSearch postSearch) {
         return postService.getList(postSearch);
+    }
+
+    @PatchMapping("/posts/{postId}")
+    public PostResponse edit(@PathVariable Long postId, @RequestBody @Valid PostEdit request) {
+        return postService.edit(postId, request);
     }
 }
